@@ -10,7 +10,7 @@ from backend.utils.alerts import send_alert_email
 import os
 
 app = Flask(__name__)
-socketio = SocketIO(app, async_mode='eventlet')
+socketio = SocketIO(app, async_mode='eventlet', cors_allowed_origins=["https://log-analysis-frontend.onrender.com","http://localhost:3000"])
 
 # PostgreSQL connection settings (you can also load these from environment variables)
 DB_CONFIG = {
