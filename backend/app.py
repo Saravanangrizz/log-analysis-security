@@ -5,6 +5,9 @@ from flask_mail import Mail, Message
 import mysql.connector
 from datetime import datetime
 import re
+import logging
+
+logging.basicConfig(level=logging.DEBUG)
 
 app = Flask(__name__)
 CORS(app)
@@ -87,4 +90,5 @@ def detect_threats():
 
 # ------------------- MAIN ------------------- #
 if __name__ == '__main__':
+    print("Starting Flask-SocketIO server...")
     socketio.run(app, debug=True, host='0.0.0.0', port=5000)
