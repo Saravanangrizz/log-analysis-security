@@ -23,11 +23,12 @@ services:
           property: database
     plan: free
 
-  - type: static
+  - type: web
     name: log-analysis-frontend
-    buildCommand: "npm install && npm run build"
-    staticPublishPath: "build"
     env: node
+    buildCommand: "npm install && npm run build"
+    startCommand: "npx serve -s build"
+    staticPublishPath: "build"
     plan: free
 
 databases:
