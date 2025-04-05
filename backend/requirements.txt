@@ -1,5 +1,8 @@
-Flask
-Flask-CORS
+flask
+flask-cors
+flask-socketio
+eventlet
 mysql-connector-python
+python-dotenv
 matplotlib
 pandas
