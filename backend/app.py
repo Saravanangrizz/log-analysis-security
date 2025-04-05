@@ -3,7 +3,7 @@
 from flask import Flask, request, jsonify
 import psycopg2
 from backend.utils.log_parser import parse_log_line
-from backend.utils.alerts import send_email_alert
+from backend.utils.alerts import send_alert_email
 import os
 
 app = Flask(__name__)
