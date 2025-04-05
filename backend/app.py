@@ -1,5 +1,8 @@
 # backend/app.py
+import eventlet
+eventlet.monkey_patch()
 
+from flask_socketio import SocketIO
 from flask import Flask, request, jsonify
 import psycopg2
 from backend.utils.log_parser import parse_log_line
@@ -7,6 +10,7 @@ from backend.utils.alerts import send_alert_email
 import os
 
 app = Flask(__name__)
+socketio = SocketIO(app, async_mode='eventlet')
 
 # PostgreSQL connection settings (you can also load these from environment variables)
 DB_CONFIG = {
@@ -56,4 +60,4 @@ def index():
     return "Log Analysis App is running!"
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    socketio = SocketIO(app, async_mode='eventlet')
