@@ -1,51 +1,59 @@
+# backend/app.py
+
 from flask import Flask, request, jsonify
-from flask_cors import CORS
-from flask_socketio import SocketIO
-import mysql.connector
-import os
+import psycopg2
 from backend.utils.log_parser import parse_log_line
-from backend.utils.alerts import send_alert_email
+from backend.utils.alerts import send_email_alert
+import os
 
 app = Flask(__name__)
-CORS(app)
-socketio = SocketIO(app, cors_allowed_origins="*")
 
-# Database connection
-conn = mysql.connector.connect(
-    host=os.environ.get("DB_HOST"),
-    user=os.environ.get("DB_USER"),
-    password=os.environ.get("DB_PASSWORD"),
-    database=os.environ.get("DB_NAME")
-)
-cursor = conn.cursor(dictionary=True)
+# PostgreSQL connection settings (you can also load these from environment variables)
+DB_CONFIG = {
+    "dbname": "log_analysis_db",
+    "user": "log_user",
+    "password": "uiCHh0hvy13nx53PrzPNiLoIP2bJRllT",
+    "host": "dpg-cvok1dq4d50c73bintn0-a.oregon-postgres.render.com",
+    "port": "5432"
+}
+
+def get_db_connection():
+    return psycopg2.connect(**DB_CONFIG)
+
+@app.route('/upload-log', methods=['POST'])
+def upload_log():
+    data = request.get_json()
+    log_line = data.get('log')
+
+    if not log_line:
+        return jsonify({'error': 'No log data provided'}), 400
+
+    parsed = parse_log_line(log_line)
+
+    if parsed:
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("""
+            INSERT INTO logs (timestamp, level, message, source_ip)
+            VALUES (%s, %s, %s, %s)
+        """, (parsed['timestamp'], parsed['level'], parsed['message'], parsed['source_ip']))
+        conn.commit()
+        cur.close()
+        conn.close()
+
+        # Threat detection example (you can expand on this logic)
+        if parsed['level'] == 'CRITICAL':
+            subject = "🚨 Security Threat Detected!"
+            body = f"A critical log was detected:\n\n{log_line}"
+            send_email_alert(subject, body, "recipient@example.com")
+
+        return jsonify({'message': 'Log stored and analyzed successfully.'}), 200
+    else:
+        return jsonify({'error': 'Failed to parse log line.'}), 400
 
 @app.route('/')
 def index():
-    return jsonify({"status": "API running"})
-
-@app.route('/upload_logs', methods=['POST'])
-def upload_logs():
-    logs = request.json.get('logs', [])
-    parsed_logs = [parse_log_line(log) for log in logs if parse_log_line(log)]
-    for log in parsed_logs:
-        query = "INSERT INTO logs (ip, timestamp, method, url, status, size) VALUES (%s, %s, %s, %s, %s, %s)"
-        cursor.execute(query, (log['ip'], log['timestamp'], log['method'], log['url'], log['status'], log['size']))
-    conn.commit()
-    socketio.emit('new_log', parsed_logs)
-    return jsonify({"message": "Logs uploaded successfully!"})
-
-@app.route('/get_logs', methods=['GET'])
-def get_logs():
-    cursor.execute("SELECT * FROM logs ORDER BY timestamp DESC LIMIT 100")
-    return jsonify(cursor.fetchall())
-
-@app.route('/detect_threats', methods=['GET'])
-def detect_threats():
-    cursor.execute("SELECT ip, COUNT(*) as count FROM logs WHERE status = '401' GROUP BY ip HAVING count > 5")
-    threats = cursor.fetchall()
-    for threat in threats:
-        send_alert_email(threat['ip'], threat['count'])
-    return jsonify({"message": "Threat detection complete!"})
+    return "Log Analysis App is running!"
 
 if __name__ == '__main__':
-    socketio.run(app, host='0.0.0.0', port=5000)
+    app.run(debug=True)
