@@ -3,8 +3,8 @@ from flask_cors import CORS
 from flask_socketio import SocketIO
 import mysql.connector
 import os
-from utils.log_parser import parse_log_line
-from utils.alerts import send_alert_email
+from backend.utils.log_parser import parse_log_line
+from backend.utils.alerts import send_alert_email
 
 app = Flask(__name__)
 CORS(app)
