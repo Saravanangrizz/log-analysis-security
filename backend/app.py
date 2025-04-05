@@ -25,7 +25,7 @@ mail = Mail(app)
 conn = mysql.connector.connect(
     host="localhost",
     user="root",
-    password="yourpassword",
+    password="Sarogrizz@18",
     database="log_analysis"
 )
 cursor = conn.cursor()
