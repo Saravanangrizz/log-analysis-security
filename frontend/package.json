@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@testing-library/dom": "^10.4.0",
+    "axios": "^1.6.8",
     "socket.io-client": "^4.7.2",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
