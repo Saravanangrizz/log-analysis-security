@@ -1,5 +1,5 @@
 MYSQL_CONFIG = {
-    'host': 'localhost',
+    'host': '127.0.0.1',
     'user': 'root',
     'password': 'Sarogrizz@18',  # 👈 replace this
     'database': 'log_analysis',
