@@ -13,3 +13,4 @@ def send_alert_email(ip, count):
         server.starttls()
         server.login(os.environ.get("SMTP_USERNAME"), os.environ.get("SMTP_PASSWORD"))
         server.send_message(msg)
+        
