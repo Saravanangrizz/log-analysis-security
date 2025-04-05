@@ -26,8 +26,8 @@ services:
   - type: web
     name: log-analysis-frontend
     env: node
-    buildCommand: "npm install && npm run build"
-    startCommand: "npx serve -s build"
+    buildCommand: "cd frontend && npm install && npm run build"
+    startCommand: "npx serve -s frontend/build"
     plan: free
 
 databases:
