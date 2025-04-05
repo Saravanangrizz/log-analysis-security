@@ -1,0 +1,37 @@
+services:
+  - type: web
+    name: log-analysis-backend
+    env: python
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "gunicorn app:app --worker-class eventlet -w 1 --bind 0.0.0.0:10000"
+    envVars:
+      - key: DB_HOST
+        fromDatabase:
+          name: log-analysis-db
+          property: host
+      - key: DB_USER
+        fromDatabase:
+          name: log-analysis-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: log-analysis-db
+          property: password
+      - key: DB_NAME
+        fromDatabase:
+          name: log-analysis-db
+          property: database
+    plan: free
+
+  - type: static
+    name: log-analysis-frontend
+    buildCommand: "npm install && npm run build"
+    staticPublishPath: "build"
+    env: node
+    plan: free
+
+databases:
+  - name: log-analysis-db
+    databaseName: log_analysis_db
+    user: log_user
+    plan: free
