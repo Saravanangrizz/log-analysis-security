@@ -2,7 +2,6 @@
 import eventlet
 eventlet.monkey_patch()
 from flask_cors import CORS
-CORS(app, origins=["https://log-analysis-frontend.onrender.com"])
 
 from flask_socketio import SocketIO
 from flask import Flask, request, jsonify
@@ -13,6 +12,7 @@ import os
 
 app = Flask(__name__)
 socketio = SocketIO(app, async_mode='eventlet', cors_allowed_origins=["https://log-analysis-frontend.onrender.com","http://localhost:3000"])
+CORS(app, origins=["https://log-analysis-frontend.onrender.com"])
 
 # PostgreSQL connection settings (you can also load these from environment variables)
 DB_CONFIG = {
