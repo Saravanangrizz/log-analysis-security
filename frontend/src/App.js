@@ -3,6 +3,7 @@ import LogUploader from "./components/LogUploader";
 import LogTable from "./components/LogTable";
 import ThreatAlert from "./components/ThreatAlert";
 import LiveChart from './components/LiveChart';
+import LiveCharts from "./components/LiveCharts";
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
       <LogUploader />
       <ThreatAlert />
       <LogTable />
+      <LiveCharts />
       <LiveChart />
     </div>
   );
