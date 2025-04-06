@@ -1,0 +1,57 @@
+/* src/components/LiveCharts.css */
+.live-chart-container {
+  background: #f5f7fa;
+  padding: 2rem;
+  border-radius: 10px;
+  max-width: 900px;
+  margin: 2rem auto;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.log-input {
+  width: 100%;
+  padding: 0.8rem;
+  font-size: 1rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  resize: vertical;
+  margin-bottom: 1rem;
+}
+
+.button-group {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.button-group button {
+  padding: 0.6rem 1.2rem;
+  background-color: #0077cc;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.button-group button:hover {
+  background-color: #005fa3;
+}
+
+.output-box {
+  background-color: #fff;
+  border-left: 4px solid #0077cc;
+  padding: 0.8rem;
+  margin-bottom: 1.5rem;
+  font-weight: 500;
+  border-radius: 6px;
+  color: #333;
+}
+
+.chart-area {
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 1rem;
+}
