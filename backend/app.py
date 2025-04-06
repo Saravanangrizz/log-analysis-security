@@ -1,4 +1,5 @@
 # backend/app.py
+from gevent import monkey
 import eventlet
 eventlet.monkey_patch()
 from flask_cors import CORS
