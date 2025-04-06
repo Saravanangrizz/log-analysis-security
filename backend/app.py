@@ -1,4 +1,4 @@
-# backend/app.py
+
 
 import eventlet
 eventlet.monkey_patch()
@@ -20,7 +20,7 @@ socketio = SocketIO(app, async_mode='eventlet', cors_allowed_origins=[
     "http://localhost:3000"
 ])
 
-# PostgreSQL connection settings
+# PostgreSQL connection
 DB_CONFIG = {
     "dbname": os.environ.get("DB_NAME"),
     "user": os.environ.get("DB_USER"),
@@ -53,7 +53,7 @@ def upload_log():
         cur.close()
         conn.close()
 
-        # Emit real-time log data to frontend
+        # Emit real-time log data
         socketio.emit('new_log', {
             'timestamp': parsed['timestamp'].isoformat() if isinstance(parsed['timestamp'], datetime) else parsed['timestamp'],
             'level': parsed['level'],
