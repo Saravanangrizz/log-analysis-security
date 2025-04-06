@@ -1,5 +1,6 @@
 absl-py==2.2.2
 psycopg2-binary==2.9.9
+gevent>=1.4
 attrs==25.3.0
 bidict==0.23.1
 blinker==1.8.2
