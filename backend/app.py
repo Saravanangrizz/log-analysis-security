@@ -1,3 +1,5 @@
+# backend/app.py
+
 import eventlet
 eventlet.monkey_patch()
 
@@ -12,8 +14,12 @@ from backend.utils.alerts import send_alert_email
 
 app = Flask(__name__)
 CORS(app, origins=["https://log-analysis-frontend.onrender.com"])
-socketio = SocketIO(app, async_mode='eventlet', cors_allowed_origins=["https://log-analysis-frontend.onrender.com", "http://localhost:3000"])
+socketio = SocketIO(app, async_mode='eventlet', cors_allowed_origins=[
+    "https://log-analysis-frontend.onrender.com",
+    "http://localhost:3000"
+])
 
+# PostgreSQL connection settings
 DB_CONFIG = {
     "dbname": os.environ.get("DB_NAME"),
     "user": os.environ.get("DB_USER"),
@@ -54,6 +60,30 @@ def upload_log():
         return jsonify({'message': 'Log stored and analyzed successfully.'}), 200
     else:
         return jsonify({'error': 'Failed to parse log line.'}), 400
+
+@app.route('/get_logs', methods=['GET'])
+def get_logs():
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("SELECT timestamp, level, message, source_ip FROM logs ORDER BY timestamp DESC LIMIT 100")
+        rows = cur.fetchall()
+        cur.close()
+        conn.close()
+
+        logs = []
+        for row in rows:
+            logs.append({
+                'timestamp': row[0].isoformat(),
+                'level': row[1],
+                'message': row[2],
+                'source_ip': row[3]
+            })
+
+        return jsonify({'logs': logs}), 200
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 @app.route('/')
 def index():
