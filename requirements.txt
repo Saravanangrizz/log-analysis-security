@@ -1,7 +1,5 @@
 absl-py==2.2.2
 psycopg2-binary==2.9.9
-greenlet==2.0.2
-gevent==23.9.1
 gunicorn==23.0.0
 attrs==25.3.0
 bidict==0.23.1
@@ -23,7 +21,6 @@ h11==0.14.0
 importlib_metadata==8.5.0
 importlib_resources==6.4.5
 itsdangerous==2.2.0
-jax==0.4.13
 Jinja2==3.1.6
 kiwisolver==1.4.7
 lxml==5.1.0
