@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import LiveChart from './components/LiveChart';
-import "./App.css"; // Create this for custom styles
+import "./App.css"; 
 
 const App = () => {
   const [logInput, setLogInput] = useState("");
@@ -21,7 +21,7 @@ const App = () => {
         { log: logInput }
       );
       setResponseMessage(response.data.message);
-      setLogInput(""); // clear textbox after submission
+      setLogInput(""); 
     } catch (error) {
       setResponseMessage(error.response?.data?.error || "Error uploading log.");
     } finally {
