@@ -3,6 +3,7 @@
 import eventlet
 eventlet.monkey_patch()
 
+from datetime import datetime
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from flask_socketio import SocketIO
@@ -52,6 +53,14 @@ def upload_log():
         cur.close()
         conn.close()
 
+        # Emit real-time log data to frontend
+        socketio.emit('new_log', {
+            'timestamp': parsed['timestamp'].isoformat() if isinstance(parsed['timestamp'], datetime) else parsed['timestamp'],
+            'level': parsed['level'],
+            'message': parsed['message'],
+            'source_ip': parsed['source_ip']
+        })
+
         if parsed['level'] == 'CRITICAL':
             subject = "🚨 Security Threat Detected!"
             body = f"A critical log was detected:\n\n{log_line}"
@@ -60,6 +69,7 @@ def upload_log():
         return jsonify({'message': 'Log stored and analyzed successfully.'}), 200
     else:
         return jsonify({'error': 'Failed to parse log line.'}), 400
+        
 
 @app.route('/get_logs', methods=['GET'])
 def get_logs():
