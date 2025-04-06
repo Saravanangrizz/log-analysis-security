@@ -16,12 +16,13 @@ socketio = SocketIO(app, async_mode='eventlet', cors_allowed_origins=["https://l
 
 # PostgreSQL connection settings (you can also load these from environment variables)
 DB_CONFIG = {
-    "dbname": "log_analysis_db",
-    "user": "log_user",
-    "password": "uiCHh0hvy13nx53PrzPNiLoIP2bJRllT",
-    "host": "dpg-cvok1dq4d50c73bintn0-a.oregon-postgres.render.com",
-    "port": "5432"
+    "dbname": os.environ.get("DB_NAME"),
+    "user": os.environ.get("DB_USER"),
+    "password": os.environ.get("DB_PASSWORD"),
+    "host": os.environ.get("DB_HOST"),
+    "port": os.environ.get("DB_PORT")
 }
+
 
 def get_db_connection():
     return psycopg2.connect(**DB_CONFIG)
