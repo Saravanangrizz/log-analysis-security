@@ -2,6 +2,7 @@ import React from "react";
 import LogUploader from "./components/LogUploader";
 import LogTable from "./components/LogTable";
 import ThreatAlert from "./components/ThreatAlert";
+import LiveChart from './components/LiveChart';
 
 function App() {
   return (
@@ -10,6 +11,7 @@ function App() {
       <LogUploader />
       <ThreatAlert />
       <LogTable />
+      <LiveChart />
     </div>
   );
 }
