@@ -12,7 +12,6 @@ import os
 
 app = Flask(__name__)
 socketio = SocketIO(app, async_mode='eventlet', cors_allowed_origins=["https://log-analysis-frontend.onrender.com","http://localhost:3000"])
-CORS(app, origins=["https://log-analysis-frontend.onrender.com"])
 
 # PostgreSQL connection settings (you can also load these from environment variables)
 DB_CONFIG = {
