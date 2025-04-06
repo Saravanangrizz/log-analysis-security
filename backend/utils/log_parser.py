@@ -1,7 +1,6 @@
 import re
 from datetime import datetime
 
-# Updated regex with non-greedy message capture (.+?)
 LOG_PATTERN = re.compile(
     r'(?P<timestamp>\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}) (?P<level>[A-Z]+) (?P<message>.+?) from (?P<ip>\d{1,3}(?:\.\d{1,3}){3})'
 )
