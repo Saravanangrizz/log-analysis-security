@@ -1,48 +1,72 @@
-import React, { useEffect, useState } from "react";
-import { getLogs } from "../api";
-import { io } from "socket.io-client";
+import React, { useEffect, useState } from 'react';
 
-const socket = io(process.env.REACT_APP_API_URL);
-
-export default function LogTable() {
+const LogTable = () => {
   const [logs, setLogs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
+    const fetchLogs = async () => {
+      try {
+        const response = await fetch('https://log-analysis-backend.onrender.com/get_logs');
+        if (!response.ok) {
+          throw new Error(`Error: ${response.status} ${response.statusText}`);
+        }
+        const data = await response.json();
+        if (Array.isArray(data.logs)) {
+          setLogs(data.logs);
+        } else {
+          throw new Error('Invalid data format');
+        }
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchLogs();
-    socket.on("new_log", (newLogs) => {
-      setLogs((prev) => [...newLogs, ...prev].slice(0, 100));
-    });
   }, []);
 
-  const fetchLogs = async () => {
-    const res = await getLogs();
-    setLogs(res.data);
-  };
+  if (loading) {
+    return <p>Loading logs...</p>;
+  }
+
+  if (error) {
+    return <p>Error fetching logs: {error}</p>;
+  }
 
   return (
-    <table className="w-full border mt-4">
-      <thead>
-        <tr>
-          <th>IP</th>
-          <th>Time</th>
-          <th>Method</th>
-          <th>URL</th>
-          <th>Status</th>
-          <th>Size</th>
-        </tr>
-      </thead>
-      <tbody>
-        {logs.map((log, i) => (
-          <tr key={i} className="border-t">
-            <td>{log.ip}</td>
-            <td>{new Date(log.timestamp).toLocaleString()}</td>
-            <td>{log.method}</td>
-            <td>{log.url}</td>
-            <td>{log.status}</td>
-            <td>{log.size}</td>
+    <div>
+      <h2>Log Entries</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Timestamp</th>
+            <th>Level</th>
+            <th>Message</th>
+            <th>Source IP</th>
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {logs.length > 0 ? (
+            logs.map((log, index) => (
+              <tr key={index}>
+                <td>{log.timestamp}</td>
+                <td>{log.level}</td>
+                <td>{log.message}</td>
+                <td>{log.source_ip}</td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="4">No logs available</td>
+            </tr>
+          )}
+        </tbody>
+      </table>
+    </div>
   );
-}
+};
+
+export default LogTable;
