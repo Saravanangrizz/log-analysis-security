@@ -62,4 +62,4 @@ def index():
     return "Log Analysis App is running!"
 
 if __name__ == '__main__':
-    socketio = SocketIO(app, async_mode='eventlet')
+    socketio = SocketIO(app, async_mode='eventlet', cors_allowed_origins=["https://log-analysis-frontend.onrender.com","http://localhost:3000"])
