@@ -1,6 +1,8 @@
 # backend/app.py
 import eventlet
 eventlet.monkey_patch()
+from flask_cors import CORS
+CORS(app, origins=["https://log-analysis-frontend.onrender.com"])
 
 from flask_socketio import SocketIO
 from flask import Flask, request, jsonify
