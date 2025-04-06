@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import LiveChart from "./LiveChart";
+import LiveChart from './components/LiveChart';
 import "./App.css"; // Create this for custom styles
 
 const App = () => {
