@@ -1,21 +1,16 @@
-# backend/app.py
-from gevent import monkey
-import eventlet
-eventlet.monkey_patch()
-from flask_cors import CORS
-
-from flask_socketio import SocketIO
 from flask import Flask, request, jsonify
+from flask_cors import CORS
+from flask_socketio import SocketIO
+import os
 import psycopg2
+
 from backend.utils.log_parser import parse_log_line
 from backend.utils.alerts import send_alert_email
-import os
 
 app = Flask(__name__)
 CORS(app, origins=["https://log-analysis-frontend.onrender.com"])
-socketio = SocketIO(app, async_mode='eventlet', cors_allowed_origins=["https://log-analysis-frontend.onrender.com","http://localhost:3000"])
+socketio = SocketIO(app, async_mode='eventlet', cors_allowed_origins=["https://log-analysis-frontend.onrender.com", "http://localhost:3000"])
 
-# PostgreSQL connection settings (you can also load these from environment variables)
 DB_CONFIG = {
     "dbname": os.environ.get("DB_NAME"),
     "user": os.environ.get("DB_USER"),
@@ -23,7 +18,6 @@ DB_CONFIG = {
     "host": os.environ.get("DB_HOST"),
     "port": os.environ.get("DB_PORT")
 }
-
 
 def get_db_connection():
     return psycopg2.connect(**DB_CONFIG)
@@ -49,11 +43,10 @@ def upload_log():
         cur.close()
         conn.close()
 
-        # Threat detection example (you can expand on this logic)
         if parsed['level'] == 'CRITICAL':
             subject = "🚨 Security Threat Detected!"
             body = f"A critical log was detected:\n\n{log_line}"
-            send_email_alert(subject, body, "recipient@example.com")
+            send_alert_email(subject, body, "recipient@example.com")
 
         return jsonify({'message': 'Log stored and analyzed successfully.'}), 200
     else:
@@ -66,5 +59,3 @@ def index():
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 10000))
     socketio.run(app, host='0.0.0.0', port=port)
-
-
